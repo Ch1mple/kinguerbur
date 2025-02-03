@@ -29,6 +29,8 @@ defineProps({
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .card {
