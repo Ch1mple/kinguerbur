@@ -1,10 +1,13 @@
 <template>
   <div class="card-list">
     <div v-for="item in data" :key="item.id" class="card">
-      <h3>{{ item.title }}</h3>
-      <p>User ID: {{ item.userId }}</p>
-      <p>ID: {{ item.id }}</p>
-      <p>Completed: {{ item.completed }}</p>
+      <img :src="item.img_url" alt="Card image" class="card-image" />
+      <h3>{{ item.name }}</h3>
+      <p>Type: {{ item.type }}</p>
+      <p>Rarity: {{ item.rarity }}</p>
+      <p>Expansion: {{ item.expansion }}</p>
+      <p>Year: {{ item.year }}</p>
+      <p>Status: {{ item.status }}</p>
     </div>
   </div>
 </template>
@@ -38,5 +41,12 @@ defineProps({
   padding: 1rem;
   border-radius: 8px;
   width: 200px;
+  text-align: center;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 </style>
