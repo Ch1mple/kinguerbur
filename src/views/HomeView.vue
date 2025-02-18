@@ -1,9 +1,8 @@
 <script setup>
 import CardList from '../components/CardList.vue'
 import CardFilter from '../components/CardFilter.vue'
-import axios from 'axios'
 import { ref, onMounted, computed } from 'vue'
-import { API_BASE_URL } from '../config.js'
+import { getCards } from '../services/apiService.js'
 
 const data = ref([])
 const error = ref(null)
@@ -31,8 +30,7 @@ const filteredData = computed(() => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}`)
-    data.value = response.data
+    data.value = await getCards()
     console.log(data.value)
   } catch (err) {
     error.value = err.message

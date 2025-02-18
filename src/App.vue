@@ -1,16 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import { onAuthStateChange, signOutUser } from './services/authService'
 import router from './router'
 
 const isLogged = ref(false)
 const userEmail = ref('')
-const auth = getAuth()
 let isOpen = ref(false)
 
 onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChange((user) => {
     if (user) {
       isLogged.value = true
       userEmail.value = user.email
@@ -19,7 +18,7 @@ onMounted(() => {
       userEmail.value = ''
     }
   })
-document.addEventListener('click', handleClickOutside)
+  document.addEventListener('click', handleClickOutside)
 })
 
 onBeforeUnmount(() => {
@@ -33,18 +32,16 @@ const handleClickOutside = (event) => {
   }
 }
 
-const handleSignOut = () => {
-  signOut(auth)
-    .then(() => {
-      console.log('Sign-out successful.')
-      isLogged.value = false
-      userEmail.value = ''
-      router.push('/login')
-      closeMenu()
-    })
-    .catch((error) => {
-      console.error('Sign-out error:', error)
-    })
+const handleSignOut = async () => {
+  try {
+    await signOutUser()
+    isLogged.value = false
+    userEmail.value = ''
+    router.push('/login')
+    closeMenu()
+  } catch (error) {
+    console.error('Sign-out error:', error)
+  }
 }
 
 const closeMenu = () => {
@@ -63,16 +60,14 @@ const closeMenu = () => {
           <span v-else>🔼</span>
         </button>
 
-
         <nav v-if="isOpen">
           <RouterLink to="/" @click="closeMenu">Home</RouterLink>
           <RouterLink to="/about" @click="closeMenu">About</RouterLink>
+          <RouterLink to="/profile" @click="closeMenu">Profile</RouterLink>
           <RouterLink to="/login" v-if="!isLogged" @click="closeMenu">Login</RouterLink>
-
-          <button class="btn-cl-se" @click="handleSignOut" v-if="isLogged">Sign Out</button>
+          <button @click="handleSignOut" v-if="isLogged">Sign Out</button>
         </nav>
       </div>
-
     </div>
   </header>
 
@@ -80,7 +75,6 @@ const closeMenu = () => {
 </template>
 
 <style scoped>
-/* Agrega estilos aquí si es necesario */
 .wrapper {
   display: flex;
   justify-content: space-between;

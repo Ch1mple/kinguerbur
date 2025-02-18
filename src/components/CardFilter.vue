@@ -24,8 +24,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import axios from 'axios'
-import { API_BASE_URL } from '../config.js'
+import { getNameSuggestions } from '../services/apiService.js'
 
 const filters = ref({
   name: '',
@@ -44,10 +43,7 @@ const applyFilters = () => {
 const updateSuggestions = async () => {
   if (filters.value.name) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/names`, {
-        params: { query: filters.value.name }
-      })
-      const suggestions = response.data
+      const suggestions = await getNameSuggestions(filters.value.name)
       nameSuggestions.value = suggestions.filter(suggestion =>
         suggestion.toLowerCase().includes(filters.value.name.toLowerCase())
       )
